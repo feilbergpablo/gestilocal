@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Rol {
+  ADMIN
+  GERENTE
+}
+
+enum TipoMovimiento {
+  INGRESO
+  GASTO
+}
+
+model Usuario {
+  id         String   @id @default(cuid())
+  nombre     String
+  email      String   @unique
+  password   String
+  rol        Rol      @default(GERENTE)
+  localId    String?
+  local      Local?   @relation(fields: [localId], references: [id])
+  creadoEn   DateTime @default(now())
+}
+
+model Local {
+  id          String       @id @default(cuid())
+  nombre      String
+  tipo        String
+  direccion   String
+  telefono    String?
+  web         String?
+  activo      Boolean      @default(true)
+  usuarios    Usuario[]
+  empleados   Empleado[]
+  productos   Producto[]
+  proveedores LocalProveedor[]
+  movimientos Movimiento[]
+  creadoEn    DateTime     @default(now())
+}
+
+model Empleado {
+  id                String    @id @default(cuid())
+  nombre            String
+  apellido          String
+  dni               String
+  cuil              String
+  telefono          String?
+  email             String?
+  fechaNacimiento   DateTime?
+  fechaIngreso      DateTime
+  cargo             String?
+  sueldo            Decimal?
+  vencimientoDni    DateTime?
+  vencimientoCarnet DateTime?
+  observaciones     String?
+  activo            Boolean   @default(true)
+  localId           String
+  local             Local     @relation(fields: [localId], references: [id])
+  creadoEn          DateTime  @default(now())
+  actualizadoEn     DateTime  @updatedAt
+}
+
+model Proveedor {
+  id            String          @id @default(cuid())
+  razonSocial   String
+  cuit          String
+  telefono      String?
+  email         String?
+  direccion     String?
+  condicionIva  String?
+  banco         String?
+  cbu           String?
+  observaciones String?
+  activo        Boolean         @default(true)
+  locales       LocalProveedor[]
+  creadoEn      DateTime        @default(now())
+  actualizadoEn DateTime        @updatedAt
+}
+
+model LocalProveedor {
+  id             String    @id @default(cuid())
+  localId        String
+  proveedorId    String
+  proximoPago    DateTime?
+  montoPendiente Decimal?  @default(0)
+  diasCredito    Int?
+  local          Local     @relation(fields: [localId], references: [id])
+  proveedor      Proveedor @relation(fields: [proveedorId], references: [id])
+  @@unique([localId, proveedorId])
+}
+
+model Producto {
+  id            String   @id @default(cuid())
+  nombre        String
+  sku           String?
+  categoria     String?
+  precioCompra  Decimal?
+  precioVenta   Decimal?
+  stock         Int      @default(0)
+  stockMinimo   Int      @default(5)
+  unidad        String?
+  activo        Boolean  @default(true)
+  localId       String
+  local         Local    @relation(fields: [localId], references: [id])
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+}
+
+model Movimiento {
+  id          String         @id @default(cuid())
+  fecha       DateTime       @default(now())
+  concepto    String
+  tipo        TipoMovimiento
+  monto       Decimal
+  comprobante String?
+  localId     String
+  local       Local          @relation(fields: [localId], references: [id])
+  creadoEn    DateTime       @default(now())
+}
