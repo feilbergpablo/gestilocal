@@ -1,22 +1,21 @@
-import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
-import { authOptions } from '@/lib/auth'
-import { Sidebar } from '@/components/layout/Sidebar'
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { Providers } from './providers'
 
-export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
+const inter = Inter({ subsets: ['latin'] })
 
-export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions)
-  if (!session) redirect('/login')
+export const metadata: Metadata = {
+  title: 'GestiLocal',
+  description: 'Sistema de gestión multi-local — Av. de Mayo',
+}
 
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar alertCount={0} />
-      {/* pt-14 en mobile deja espacio para el topbar fijo; en desktop (md:) vuelve a 0 */}
-      <main className="flex-1 overflow-y-auto pt-14 md:pt-0">
-        {children}
-      </main>
-    </div>
+    <html lang="es">
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
   )
 }
