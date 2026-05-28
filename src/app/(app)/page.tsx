@@ -37,55 +37,73 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="mb-6">
+    <div className="p-4 md:p-6 max-w-5xl mx-auto">
+      <div className="mb-5">
         <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-400 mt-0.5">Buenos días — {new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+        <p className="text-sm text-gray-400 mt-0.5">
+          Buenos días — {new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
+        </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-3 mb-6">
+      {/* Stats: 2 columnas en mobile, 4 en desktop */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         {[
           { label: 'Empleados', value: totalEmpleados, icon: Users, sub: 'en todos los locales' },
           { label: 'Productos', value: totalProductos, icon: Package, sub: 'en stock' },
           { label: 'Proveedores', value: totalProveedores, icon: Truck, sub: 'activos' },
           { label: 'Facturación del mes', value: `$${facturacionMes.toLocaleString('es-AR')}`, icon: TrendingUp, sub: 'ingresos acumulados' },
         ].map(m => (
-          <div key={m.label} className="bg-white rounded-xl border border-gray-100 p-4">
+          <div key={m.label} className="bg-white rounded-xl border border-gray-100 p-3 md:p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-gray-400">{m.label}</span>
-              <m.icon size={14} className="text-gray-300" />
+              <span className="text-xs text-gray-400 leading-tight">{m.label}</span>
+              <m.icon size={14} className="text-gray-300 flex-shrink-0" />
             </div>
-            <div className="text-2xl font-semibold text-gray-900">{m.value}</div>
+            <div className="text-xl md:text-2xl font-semibold text-gray-900 truncate">{m.value}</div>
             <div className="text-xs text-gray-400 mt-0.5">{m.sub}</div>
           </div>
         ))}
       </div>
 
       {alertas.length > 0 && (
-        <Link href="/alertas" className="flex items-center gap-3 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mb-6 hover:bg-amber-100 transition-colors">
+        <Link
+          href="/alertas"
+          className="flex items-center gap-3 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mb-5 hover:bg-amber-100 transition-colors"
+        >
           <AlertTriangle size={16} className="text-amber-600 flex-shrink-0" />
-          <span className="text-sm text-amber-800 font-medium">{alertas.length} alerta{alertas.length !== 1 ? 's' : ''} activa{alertas.length !== 1 ? 's' : ''} requieren atención</span>
-          <span className="ml-auto text-xs text-amber-600">Ver todas →</span>
+          <span className="text-sm text-amber-800 font-medium">
+            {alertas.length} alerta{alertas.length !== 1 ? 's' : ''} activa{alertas.length !== 1 ? 's' : ''} requieren atención
+          </span>
+          <span className="ml-auto text-xs text-amber-600 flex-shrink-0">Ver todas →</span>
         </Link>
       )}
 
       <h2 className="text-sm font-medium text-gray-600 mb-3">Locales</h2>
-      <div className="grid grid-cols-2 gap-3">
+
+      {/* Locales: 1 columna en mobile, 2 en desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {locales.map(local => (
-          <Link key={local.id} href={`/locales/${local.id}`} className="card p-4 hover:border-gray-200 transition-colors group">
-            <div className="flex items-start gap-3">
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 ${localColors[local.nombre] ?? 'bg-gray-100 text-gray-500'}`}>
+          <Link
+            key={local.id}
+            href={`/locales/${local.id}`}
+            className="bg-white rounded-xl border border-gray-100 p-4 hover:border-gray-200 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 ${localColors[local.nombre] ?? 'bg-gray-100 text-gray-500'}`}>
                 {local.nombre.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-gray-900 group-hover:text-gray-700">{local.nombre}</div>
-                <div className="text-xs text-gray-400 mt-0.5 truncate">{local.tipo}</div>
-                <div className="flex gap-3 mt-2">
-                  <span className="text-xs text-gray-400"><span className="font-medium text-gray-700">{local._count.empleados}</span> empleados</span>
-                  <span className="text-xs text-gray-400"><span className="font-medium text-gray-700">{local._count.productos}</span> productos</span>
-                </div>
+                <div className="font-medium text-gray-900 truncate">{local.nombre}</div>
+                <div className="text-xs text-gray-400 truncate">{local.tipo}</div>
               </div>
-              <span className="text-gray-300 group-hover:text-gray-500 transition-colors">→</span>
+              <span className="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0">→</span>
+            </div>
+            <div className="flex gap-4 mt-3 pl-13">
+              <span className="text-xs text-gray-400">
+                <span className="font-medium text-gray-700">{local._count.empleados}</span> empleados
+              </span>
+              <span className="text-xs text-gray-400">
+                <span className="font-medium text-gray-700">{local._count.productos}</span> productos
+              </span>
             </div>
           </Link>
         ))}
