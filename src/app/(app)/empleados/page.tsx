@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import { prisma } from '@/lib/prisma'
 import { format, differenceInDays } from 'date-fns'
 import { es } from 'date-fns/locale'

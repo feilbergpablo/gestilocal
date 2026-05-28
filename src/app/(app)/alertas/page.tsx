@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import { getAlertas } from '@/lib/alertas'
 import { AlertTriangle, Package, FileWarning, CreditCard } from 'lucide-react'
 import { clsx } from 'clsx'
