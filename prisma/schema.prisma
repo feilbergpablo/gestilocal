@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Rol {
@@ -46,25 +45,25 @@ model Local {
 }
 
 model Empleado {
-  id                String    @id @default(cuid())
-  nombre            String
-  apellido          String
-  dni               String
-  cuil              String
-  telefono          String?
-  email             String?
-  fechaNacimiento   DateTime?
-  fechaIngreso      DateTime
-  cargo             String?
-  sueldo            Decimal?
-  vencimientoDni    DateTime?
+  id               String    @id @default(cuid())
+  nombre           String
+  apellido         String
+  dni              String
+  cuil             String
+  telefono         String?
+  email            String?
+  fechaNacimiento  DateTime?
+  fechaIngreso     DateTime
+  cargo            String?
+  sueldo           Decimal?
+  vencimientoDni   DateTime?
   vencimientoCarnet DateTime?
-  observaciones     String?
-  activo            Boolean   @default(true)
-  localId           String
-  local             Local     @relation(fields: [localId], references: [id])
-  creadoEn          DateTime  @default(now())
-  actualizadoEn     DateTime  @updatedAt
+  observaciones    String?
+  activo           Boolean   @default(true)
+  localId          String
+  local            Local     @relation(fields: [localId], references: [id])
+  creadoEn         DateTime  @default(now())
+  actualizadoEn    DateTime  @updatedAt
 }
 
 model Proveedor {
@@ -85,14 +84,14 @@ model Proveedor {
 }
 
 model LocalProveedor {
-  id             String    @id @default(cuid())
-  localId        String
-  proveedorId    String
-  proximoPago    DateTime?
-  montoPendiente Decimal?  @default(0)
-  diasCredito    Int?
-  local          Local     @relation(fields: [localId], references: [id])
-  proveedor      Proveedor @relation(fields: [proveedorId], references: [id])
+  id              String    @id @default(cuid())
+  localId         String
+  proveedorId     String
+  proximoPago     DateTime?
+  montoPendiente  Decimal?  @default(0)
+  diasCredito     Int?
+  local           Local     @relation(fields: [localId], references: [id])
+  proveedor       Proveedor @relation(fields: [proveedorId], references: [id])
   @@unique([localId, proveedorId])
 }
 
